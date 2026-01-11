@@ -483,10 +483,10 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
   };
 
   const renderTree = (nodes: TreeNode[], level: number = 0): React.ReactNode => {
-    return nodes.map((node, index) => {
+    return nodes.map((node, _index) => {
       const isExpanded = expandedNodes.has(node.key);
       const hasChildren = !!(node.children && node.children.length > 0);
-      // isNodeLast used for styling reference: index === nodes.length - 1
+      // isNodeLast used for styling reference: _index === nodes.length - 1
       const indent = level * 24;
       const isSelected = selectedSource === node.source;
       
