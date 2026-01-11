@@ -1,32 +1,36 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, ArrowRight, ChevronLeft } from 'lucide-react';
 
-// מבנה הש"ס - 6 סדרים עם המסכתות שלהם
+// מבנה הש"ס - 6 סדרים עם המסכתות שיש להם גמרא בבלי בלבד
 const SHAS_STRUCTURE = {
   'זרעים': {
-    color: 'from-emerald-500 to-emerald-600',
-    masechtot: ['ברכות', 'פאה', 'דמאי', 'כלאים', 'שביעית', 'תרומות', 'מעשרות', 'מעשר שני', 'חלה', 'ערלה', 'בכורים']
+    color: 'from-navy-700 to-navy-800',
+    // רק ברכות יש גמרא בבלי בסדר זרעים
+    masechtot: ['ברכות']
   },
   'מועד': {
-    color: 'from-blue-500 to-blue-600',
-    masechtot: ['שבת', 'עירובין', 'פסחים', 'שקלים', 'יומא', 'סוכה', 'ביצה', 'ראש השנה', 'תענית', 'מגילה', 'מועד קטן', 'חגיגה']
+    color: 'from-gold-500 to-gold-600',
+    // שקלים אין גמרא בבלי (רק ירושלמי)
+    masechtot: ['שבת', 'עירובין', 'פסחים', 'יומא', 'סוכה', 'ביצה', 'ראש השנה', 'תענית', 'מגילה', 'מועד קטן', 'חגיגה']
   },
   'נשים': {
-    color: 'from-pink-500 to-pink-600',
+    color: 'from-navy-600 to-navy-700',
     masechtot: ['יבמות', 'כתובות', 'נדרים', 'נזיר', 'סוטה', 'גיטין', 'קידושין']
   },
   'נזיקין': {
-    color: 'from-orange-500 to-orange-600',
-    masechtot: ['בבא קמא', 'בבא מציעא', 'בבא בתרא', 'סנהדרין', 'מכות', 'שבועות', 'עדויות', 'עבודה זרה', 'אבות', 'הוריות']
+    color: 'from-gold-600 to-gold-700',
+    // עדויות ואבות אין גמרא בבלי
+    masechtot: ['בבא קמא', 'בבא מציעא', 'בבא בתרא', 'סנהדרין', 'מכות', 'שבועות', 'עבודה זרה', 'הוריות']
   },
   'קדשים': {
-    color: 'from-purple-500 to-purple-600',
-    masechtot: ['זבחים', 'מנחות', 'חולין', 'בכורות', 'ערכין', 'תמורה', 'כריתות', 'מעילה', 'תמיד', 'קינים']
+    color: 'from-navy-800 to-navy-900',
+    // קינים אין גמרא בבלי
+    masechtot: ['זבחים', 'מנחות', 'חולין', 'בכורות', 'ערכין', 'תמורה', 'כריתות', 'מעילה', 'תמיד']
   },
   'טהרות': {
-    color: 'from-teal-500 to-teal-600',
-    masechtot: ['כלים', 'אהלות', 'נגעים', 'פרה', 'טהרות', 'מקואות', 'נידה', 'מכשירין', 'זבים', 'טבול יום', 'ידים', 'עוקצין']
+    color: 'from-mouse-500 to-mouse-600',
+    // רק נידה יש גמרא בבלי בסדר טהרות
+    masechtot: ['נידה']
   }
 };
 
@@ -121,6 +125,8 @@ const GemaraExplorer: React.FC = () => {
 
   const handlePageClick = (page: number, amud: 'א' | 'ב') => {
     if (!selectedMasechet) return;
+    
+    // ניווט לדף המקור בתוך האפליקציה - עם פסקי דין קשורים
     const source = `gemara:${selectedMasechet}:${page}:${amud}`;
     navigate(`/source/${encodeURIComponent(source)}`);
   };
@@ -141,8 +147,8 @@ const GemaraExplorer: React.FC = () => {
       <div className="mb-8 p-6 bg-white rounded-2xl border-2 border-gold-400 shadow-elegant">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-gradient-to-br from-gold-400 to-gold-600 rounded-xl shadow-gold">
-              <BookOpen className="w-8 h-8 text-navy-900" />
+            <div className="w-14 h-14 bg-gradient-to-br from-gold-400 to-gold-600 rounded-xl shadow-gold flex items-center justify-center">
+              <span className="text-lg font-bold text-navy-900">גמ</span>
             </div>
             <div>
               <h1 className="text-3xl font-bold text-navy-900">גמרא</h1>
@@ -156,9 +162,9 @@ const GemaraExplorer: React.FC = () => {
           {viewMode !== 'sedarim' && (
             <button
               onClick={handleBack}
-              className="flex items-center gap-2 px-4 py-2 bg-cream-200 text-navy-900 rounded-xl hover:bg-cream-300 transition-colors font-medium"
+              className="flex items-center gap-2 px-4 py-2 bg-mouse-200 text-navy-900 rounded-xl hover:bg-mouse-300 transition-colors font-medium"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <span>◀</span>
               חזור
             </button>
           )}
@@ -178,7 +184,7 @@ const GemaraExplorer: React.FC = () => {
               >
                 <div className="mb-4">
                   <div className={`inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br ${sederData.color} rounded-2xl shadow-lg mb-4 group-hover:scale-110 transition-transform`}>
-                    <BookOpen className="w-10 h-10 text-white" />
+                    <span className="text-2xl font-bold text-white">{seder.substring(0, 2)}</span>
                   </div>
                 </div>
                 <h2 className="text-2xl font-bold text-navy-900 mb-2">{seder}</h2>
@@ -187,7 +193,7 @@ const GemaraExplorer: React.FC = () => {
                 </p>
                 <div className="mt-4 flex items-center justify-center gap-2 text-gold-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
                   <span>לחץ לפתיחה</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span>►</span>
                 </div>
               </button>
             );
@@ -205,14 +211,14 @@ const GemaraExplorer: React.FC = () => {
                 <button
                   key={masechet}
                   onClick={() => handleMasechetClick(masechet)}
-                  className="group flex items-center justify-between p-4 bg-cream-50 rounded-xl border-2 border-gold-200 hover:border-gold-500 hover:bg-gold-50 transition-all"
+                  className="group flex items-center justify-between p-4 bg-mouse-50 rounded-xl border-2 border-gold-200 hover:border-gold-500 hover:bg-gold-50 transition-all"
                 >
                   <div className="text-right">
                     <div className="text-lg font-bold text-navy-900">{masechet}</div>
                     <div className="text-sm text-mouse-600">{pageCount} דפים</div>
                   </div>
-                  <div className="p-2 bg-gold-100 rounded-lg group-hover:bg-gold-200 transition-colors">
-                    <BookOpen className="w-5 h-5 text-gold-600" />
+                  <div className="w-10 h-10 bg-gold-100 rounded-lg group-hover:bg-gold-200 transition-colors flex items-center justify-center">
+                    <span className="text-sm font-bold text-gold-600">מס</span>
                   </div>
                 </button>
               );
@@ -228,7 +234,7 @@ const GemaraExplorer: React.FC = () => {
             {Array.from({ length: MASECHET_PAGES[selectedMasechet] || 0 }, (_, i) => i + 2).map((page) => (
               <div key={page} className="relative">
                 {/* Card for the page */}
-                <div className="bg-cream-50 rounded-xl border-2 border-gold-300 p-3 text-center">
+                <div className="bg-mouse-50 rounded-xl border-2 border-gold-300 p-3 text-center">
                   <div className="text-xl font-bold text-navy-900 mb-2">
                     דף {numberToHebrew(page)}
                   </div>
@@ -247,19 +253,19 @@ const GemaraExplorer: React.FC = () => {
                     </button>
                   </div>
                 </div>
-                {/* Green indicator dot */}
-                <div className="absolute -top-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
+                {/* Indicator dot */}
+                <div className="absolute -top-2 -right-2 w-4 h-4 bg-gold-500 rounded-full border-2 border-white shadow-sm"></div>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Floating Action Button (like in the design) */}
+      {/* Floating Action Button */}
       {viewMode === 'sedarim' && (
         <div className="fixed bottom-8 right-8">
           <button className="w-16 h-16 bg-gradient-to-br from-gold-500 to-gold-600 rounded-full shadow-xl hover:shadow-2xl transition-all flex items-center justify-center text-navy-900 hover:scale-110">
-            <BookOpen className="w-8 h-8" />
+            <span className="text-xl font-bold">גמ</span>
           </button>
         </div>
       )}

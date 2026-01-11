@@ -5,13 +5,10 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000,
-    // Open the dev server in Opera by default on Windows.
-    // Update the path below if Opera is installed in a different location.
-    open: {
-      app: {
-        name: 'C:\\Program Files\\Opera\\launcher.exe'
-      }
-    }
+    port: 3000
+  },
+  build: {
+    outDir: 'dist',
+    sourcemap: false
   }
 })

@@ -1,31 +1,30 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Scale, ArrowRight, ChevronLeft, BookMarked } from 'lucide-react';
 
 // מבנה השולחן ערוך - 4 חלקים עם טווח סימנים
 const SHULCHAN_ARUCH_STRUCTURE = {
   'אורח חיים': {
     prefix: 'או"ח',
     range: [1, 697],
-    color: 'from-blue-500 to-blue-600',
+    color: 'from-navy-700 to-navy-800',
     description: 'דיני תפילה, שבת ומועדים'
   },
   'יורה דעה': {
     prefix: 'יו"ד',
     range: [1, 403],
-    color: 'from-green-500 to-green-600',
+    color: 'from-gold-500 to-gold-600',
     description: 'דיני איסור והיתר, נדרים ונדבות'
   },
   'אבן העזר': {
     prefix: 'אבה"ע',
     range: [1, 178],
-    color: 'from-pink-500 to-pink-600',
+    color: 'from-navy-600 to-navy-700',
     description: 'דיני אישות וגירושין'
   },
   'חושן משפט': {
     prefix: 'חו"מ',
     range: [1, 427],
-    color: 'from-purple-500 to-purple-600',
+    color: 'from-gold-600 to-gold-700',
     description: 'דיני ממונות ודינים'
   }
 };
@@ -95,8 +94,8 @@ const ShulchanAruchExplorer: React.FC = () => {
       <div className="mb-8 p-6 bg-white rounded-2xl border-2 border-gold-400 shadow-elegant">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-gradient-to-br from-gold-400 to-gold-600 rounded-xl shadow-gold">
-              <Scale className="w-8 h-8 text-navy-900" />
+            <div className="w-14 h-14 bg-gradient-to-br from-gold-400 to-gold-600 rounded-xl shadow-gold flex items-center justify-center">
+              <span className="text-lg font-bold text-navy-900">ש"ע</span>
             </div>
             <div>
               <h1 className="text-3xl font-bold text-navy-900">שולחן ערוך</h1>
@@ -109,9 +108,9 @@ const ShulchanAruchExplorer: React.FC = () => {
           {viewMode !== 'chalakim' && (
             <button
               onClick={handleBack}
-              className="flex items-center gap-2 px-4 py-2 bg-cream-200 text-navy-900 rounded-xl hover:bg-cream-300 transition-colors font-medium"
+              className="flex items-center gap-2 px-4 py-2 bg-mouse-200 text-navy-900 rounded-xl hover:bg-mouse-300 transition-colors font-medium"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <span>◀</span>
               חזור
             </button>
           )}
@@ -134,7 +133,7 @@ const ShulchanAruchExplorer: React.FC = () => {
               >
                 <div className="mb-4">
                   <div className={`inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br ${chelekData.color} rounded-2xl shadow-lg mb-4 group-hover:scale-110 transition-transform`}>
-                    <BookMarked className="w-10 h-10 text-white" />
+                    <span className="text-xl font-bold text-white">{chelekData.prefix}</span>
                   </div>
                 </div>
                 <h2 className="text-2xl font-bold text-navy-900 mb-2">{chelek}</h2>
@@ -145,7 +144,7 @@ const ShulchanAruchExplorer: React.FC = () => {
                 </p>
                 <div className="mt-4 flex items-center gap-2 text-gold-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
                   <span>לחץ לפתיחה</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span>►</span>
                 </div>
               </button>
             );
@@ -164,9 +163,9 @@ const ShulchanAruchExplorer: React.FC = () => {
                 placeholder="חפש מספר סימן..."
                 value={searchSiman}
                 onChange={(e) => setSearchSiman(e.target.value)}
-                className="w-full px-4 py-3 pr-12 bg-cream-50 border-2 border-gold-300 rounded-xl focus:outline-none focus:border-gold-500 text-navy-900 placeholder-mouse-400"
+                className="w-full px-4 py-3 pr-16 bg-mouse-50 border-2 border-gold-300 rounded-xl focus:outline-none focus:border-gold-500 text-navy-900 placeholder-mouse-400"
               />
-              <BookMarked className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gold-500" />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gold-500 font-bold text-sm">חפש</span>
             </div>
           </div>
 
@@ -199,7 +198,7 @@ const ShulchanAruchExplorer: React.FC = () => {
                 key={siman}
                 id={`siman-${siman}`}
                 onClick={() => handleSimanClick(siman)}
-                className="group relative bg-cream-50 rounded-xl border-2 border-gold-300 hover:border-gold-500 hover:bg-gold-50 transition-all p-4 text-center"
+                className="group relative bg-mouse-50 rounded-xl border-2 border-gold-300 hover:border-gold-500 hover:bg-gold-50 transition-all p-4 text-center"
               >
                 <div className="text-lg font-bold text-navy-900 mb-1">
                   סימן {numberToHebrew(siman)}
@@ -207,8 +206,8 @@ const ShulchanAruchExplorer: React.FC = () => {
                 <div className="text-xs text-mouse-500">
                   {siman}
                 </div>
-                {/* Green indicator dot */}
-                <div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                {/* Indicator dot */}
+                <div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-gold-500 rounded-full border-2 border-white shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"></div>
               </button>
             ))}
           </div>
@@ -232,7 +231,7 @@ const ShulchanAruchExplorer: React.FC = () => {
       {viewMode === 'chalakim' && (
         <div className="fixed bottom-8 right-8">
           <button className="w-16 h-16 bg-gradient-to-br from-gold-500 to-gold-600 rounded-full shadow-xl hover:shadow-2xl transition-all flex items-center justify-center text-navy-900 hover:scale-110">
-            <Scale className="w-8 h-8" />
+            <span className="text-xl font-bold">ש"ע</span>
           </button>
         </div>
       )}

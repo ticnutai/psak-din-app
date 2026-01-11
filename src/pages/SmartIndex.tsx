@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Search, Filter, ChevronDown, Settings, CheckSquare, Square, Book, FileText, File, ExternalLink, Eye, Columns, X, Loader } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { PsakDin } from '../types';
 import { buildSourceIndex, getSourcesByFrequency } from '../utils/smartReferences';
 
@@ -447,11 +447,11 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
   };
 
   const getNodeIcon = (level: number, hasChildren: boolean) => {
-    if (level === 0) return <BookOpen className="w-5 h-5 text-navy-900" />; // גמרא
-    if (level === 1) return <Book className="w-5 h-5 text-gold-600" />; // סדר
-    if (level === 2) return <Book className="w-4 h-4 text-navy-700" />; // מסכת
-    if (level === 3 && hasChildren) return <FileText className="w-4 h-4 text-gold-500" />; // דף
-    return <File className="w-3.5 h-3.5 text-mouse-500" />; // עמוד
+    if (level === 0) return <span className="w-5 h-5 flex items-center justify-center bg-navy-100 text-navy-900 rounded text-xs font-bold">גמ</span>; // גמרא
+    if (level === 1) return <span className="w-5 h-5 flex items-center justify-center bg-gold-100 text-gold-700 rounded text-xs font-bold">סד</span>; // סדר
+    if (level === 2) return <span className="w-4 h-4 flex items-center justify-center bg-navy-50 text-navy-700 rounded text-xs font-bold">מס</span>; // מסכת
+    if (level === 3 && hasChildren) return <span className="w-4 h-4 flex items-center justify-center bg-gold-50 text-gold-600 rounded text-xs font-bold">דף</span>; // דף
+    return <span className="w-3.5 h-3.5 flex items-center justify-center bg-mouse-100 text-mouse-600 rounded text-xs font-bold">ע</span>; // עמוד
   };
 
   const getNodeStyle = (level: number, isSelected: boolean, isExpanded: boolean) => {
@@ -471,22 +471,22 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
     }
     if (level === 2) {
       return isExpanded
-        ? 'bg-gradient-to-l from-cream-200 to-white hover:from-cream-300'
-        : 'hover:bg-gradient-to-l hover:from-cream-100 hover:to-white';
+        ? 'bg-gradient-to-l from-mouse-200 to-white hover:from-mouse-300'
+        : 'hover:bg-gradient-to-l hover:from-mouse-100 hover:to-white';
     }
     if (level === 3) {
       return isExpanded
         ? 'bg-gradient-to-l from-gold-50/50 to-white hover:from-gold-50'
         : 'hover:bg-gradient-to-l hover:from-gold-50/50 hover:to-white';
     }
-    return 'hover:bg-cream-100';
+    return 'hover:bg-mouse-100';
   };
 
   const renderTree = (nodes: TreeNode[], level: number = 0): React.ReactNode => {
     return nodes.map((node, index) => {
       const isExpanded = expandedNodes.has(node.key);
       const hasChildren = !!(node.children && node.children.length > 0);
-      const isNodeLast = index === nodes.length - 1;
+      // isNodeLast used for styling reference: index === nodes.length - 1
       const indent = level * 24;
       const isSelected = selectedSource === node.source;
       
@@ -495,7 +495,7 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
           {/* Tree line connector */}
           {level > 0 && (
             <div 
-              className="absolute top-0 bottom-0 border-r-2 border-gray-200"
+              className="absolute top-0 bottom-0 border-r-2 border-mouse-200"
               style={{ right: `${indent - 12}px` }}
             />
           )}
@@ -503,7 +503,7 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
           {/* Horizontal connector */}
           {level > 0 && (
             <div 
-              className="absolute top-5 h-px bg-gray-200"
+              className="absolute top-5 h-px bg-mouse-200"
               style={{ 
                 right: `${indent - 12}px`,
                 width: '12px'
@@ -566,8 +566,7 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
                 className="view-source-btn flex-shrink-0 px-3 py-2 bg-gradient-to-r from-gold-500 to-gold-600 text-navy-900 rounded-lg hover:from-gold-600 hover:to-gold-700 transition-all text-sm font-bold flex items-center gap-2 shadow-md hover:shadow-lg border border-gold-400"
                 title="צפה במקור המלא"
               >
-                <Eye className="w-4 h-4" />
-                <span>👁️ צפה</span>
+                <span>צפה</span>
               </button>
             )}
             
@@ -581,7 +580,7 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
                 ? 'bg-gold-500 text-navy-900'
                 : level === 2
                 ? 'bg-navy-100 text-navy-700'
-                : 'bg-cream-200 text-mouse-600'
+                : 'bg-mouse-200 text-mouse-600'
             }`}>
               {node.count}
             </span>
@@ -638,23 +637,72 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
   
   // Parse source to Sefaria ref
   const parseSourceToSefaria = (source: string): string | null => {
-    const gemaraMatch = source.match(/gemara:([^:]+):(\d+)([אב]?)/);
+    // המרת שמות מסכתות מעברית לאנגלית עבור Sefaria API
+    const masechetToEnglish: Record<string, string> = {
+      'ברכות': 'Berakhot',
+      'שבת': 'Shabbat',
+      'עירובין': 'Eruvin',
+      'פסחים': 'Pesachim',
+      'שקלים': 'Shekalim',
+      'יומא': 'Yoma',
+      'סוכה': 'Sukkah',
+      'ביצה': 'Beitzah',
+      'ראש השנה': 'Rosh_Hashanah',
+      'תענית': 'Taanit',
+      'מגילה': 'Megillah',
+      'מועד קטן': 'Moed_Katan',
+      'חגיגה': 'Chagigah',
+      'יבמות': 'Yevamot',
+      'כתובות': 'Ketubot',
+      'נדרים': 'Nedarim',
+      'נזיר': 'Nazir',
+      'סוטה': 'Sotah',
+      'גיטין': 'Gittin',
+      'קידושין': 'Kiddushin',
+      'בבא קמא': 'Bava_Kamma',
+      'בבא מציעא': 'Bava_Metzia',
+      'בבא בתרא': 'Bava_Batra',
+      'סנהדרין': 'Sanhedrin',
+      'מכות': 'Makkot',
+      'שבועות': 'Shevuot',
+      'עבודה זרה': 'Avodah_Zarah',
+      'הוריות': 'Horayot',
+      'זבחים': 'Zevachim',
+      'מנחות': 'Menachot',
+      'חולין': 'Chullin',
+      'בכורות': 'Bekhorot',
+      'ערכין': 'Arakhin',
+      'תמורה': 'Temurah',
+      'כריתות': 'Keritot',
+      'מעילה': 'Meilah',
+      'תמיד': 'Tamid',
+      'קינים': 'Kinnim',
+      'נידה': 'Niddah'
+    };
+
+    const gemaraMatch = source.match(/gemara:([^:]+):(\d+):?([אב]?)/);
     if (gemaraMatch) {
       const masechet = gemaraMatch[1];
       const daf = gemaraMatch[2];
       const amud = gemaraMatch[3] || 'א';
-      return `${masechet}.${daf}${amud}`;
+      const amudLetter = amud === 'א' ? 'a' : 'b';
+      
+      // המרה לאנגלית
+      const englishName = masechetToEnglish[masechet] || masechet.replace(/ /g, '_');
+      return `${englishName}.${daf}${amudLetter}`;
     }
     
     const shulchanAruchMatch = source.match(/shulchan_aruch:([^:]+):(\d+)/);
     if (shulchanAruchMatch) {
-      const chelek = shulchanAruchMatch[1];
+      let chelek = shulchanAruchMatch[1];
       const siman = shulchanAruchMatch[2];
-      let sefariaBook = 'Shulchan Arukh, Orach Chaim';
-      if (chelek.includes('יורה') || chelek.includes('יו"ד')) sefariaBook = 'Shulchan Arukh, Yoreh De\'ah';
-      else if (chelek.includes('אבן') || chelek.includes('אבה"ע')) sefariaBook = 'Shulchan Arukh, Even HaEzer';
-      else if (chelek.includes('חושן') || chelek.includes('חו"מ')) sefariaBook = 'Shulchan Arukh, Choshen Mishpat';
-      return `${sefariaBook}.${siman}`;
+      
+      if (chelek.includes('או"ח') || chelek.includes('אורח חיים')) chelek = 'Orach_Chaim';
+      else if (chelek.includes('יו"ד') || chelek.includes('יורה דעה')) chelek = 'Yoreh_Deah';
+      else if (chelek.includes('אבה"ע') || chelek.includes('אבן העזר')) chelek = 'Even_HaEzer';
+      else if (chelek.includes('חו"מ') || chelek.includes('חושן משפט')) chelek = 'Choshen_Mishpat';
+      
+      return `Shulchan_Arukh,_${chelek}.${siman}`;
     }
     
     return null;
@@ -729,7 +777,7 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
       <div className="flex items-center justify-between p-6 bg-white rounded-2xl border-2 border-gold-400 shadow-elegant">
         <div className="flex items-center gap-4">
           <div className="p-3 bg-gradient-to-br from-gold-400 to-gold-600 rounded-xl shadow-gold">
-            <BookOpen className="w-8 h-8 text-navy-900" />
+            <span className="w-8 h-8 flex items-center justify-center text-navy-900 text-2xl font-bold">אח</span>
           </div>
           <div>
             <h1 className="text-3xl font-bold text-navy-900">אינדקס חכם</h1>
@@ -740,7 +788,7 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
           onClick={() => setShowPsakSelector(true)}
           className="flex items-center gap-2 px-4 py-2.5 bg-navy-900 text-gold-400 rounded-xl hover:bg-navy-800 transition-colors font-medium border border-navy-700"
         >
-          <Settings className="w-5 h-5" />
+          <span>⚙</span>
           <span>נתח פסקים ({selectedPsakIds.size}/{psakim.length})</span>
         </button>
       </div>
@@ -749,19 +797,19 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
       <div className="bg-white p-6 rounded-2xl border-2 border-gold-400 shadow-elegant space-y-4">
         {/* Search Bar */}
         <div className="relative">
-          <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gold-500 w-5 h-5" />
+          <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gold-500">🔍</span>
           <input
             type="text"
             placeholder="חפש מקור (למשל: בבא מציעא, דף לה, או'ח)"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pr-12 pl-4 py-3 border-2 border-gold-300 rounded-xl focus:ring-2 focus:ring-gold-400 focus:border-gold-500 bg-cream-50"
+            className="w-full pr-12 pl-4 py-3 border-2 border-gold-300 rounded-xl focus:ring-2 focus:ring-gold-400 focus:border-gold-500 bg-mouse-50"
           />
         </div>
 
         {/* Type Filters */}
         <div className="flex items-center gap-2 flex-wrap">
-          <Filter className="w-5 h-5 text-gold-600" />
+          <span className="text-gold-600">▼</span>
           <span className="text-sm font-medium text-navy-800">סינון לפי סוג:</span>
           {(['all', 'gemara', 'shulchan_aruch', 'rambam', 'mishna'] as SourceType[]).map((type) => (
             <button
@@ -773,7 +821,7 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors border-2 ${
                 filterType === type
                   ? 'bg-gold-500 text-navy-900 border-gold-600'
-                  : 'bg-cream-100 text-navy-700 border-cream-300 hover:bg-cream-200 hover:border-gold-400'
+                  : 'bg-mouse-100 text-navy-700 border-mouse-300 hover:bg-mouse-200 hover:border-gold-400'
               }`}
             >
               {type === 'all' ? 'הכל' : getTypeLabel(type)}
@@ -792,16 +840,16 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left: Tree View */}
         <div className="bg-white rounded-2xl border-2 border-gold-400 shadow-elegant overflow-hidden">
-          <div className="p-4 border-b-2 border-gold-300 bg-gradient-to-l from-gold-100 to-cream-50">
+          <div className="p-4 border-b-2 border-gold-300 bg-gradient-to-l from-gold-100 to-mouse-50">
             <h2 className="text-lg font-bold text-navy-900 flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-gold-600" />
+              <span className="w-5 h-5 flex items-center justify-center bg-gold-100 text-gold-700 rounded text-xs font-bold">מק</span>
               מקורות - תצוגת עץ
             </h2>
           </div>
-          <div className="divide-y divide-cream-200 max-h-[700px] overflow-y-auto">
+          <div className="divide-y divide-mouse-200 max-h-[700px] overflow-y-auto">
             {treeData.length === 0 ? (
               <div className="p-8 text-center text-mouse-500">
-                <BookOpen className="w-12 h-12 mx-auto mb-2 text-gold-300" />
+                <span className="w-12 h-12 mx-auto mb-2 block text-gold-300 text-4xl">📚</span>
                 <p>לא נמצאו מקורות</p>
               </div>
             ) : (
@@ -812,7 +860,7 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
 
         {/* Right: Psakim for Selected Source */}
         <div className="bg-white rounded-2xl border-2 border-gold-400 shadow-elegant overflow-hidden">
-          <div className="p-4 border-b-2 border-gold-300 bg-gradient-to-l from-navy-100 to-cream-50 flex items-center justify-between">
+          <div className="p-4 border-b-2 border-gold-300 bg-gradient-to-l from-navy-100 to-mouse-50 flex items-center justify-between">
             <h2 className="text-lg font-bold text-navy-900">
               {selectedSourceData ? `פסקי דין - ${selectedSourceData.display}` : 'בחר מקור'}
             </h2>
@@ -822,22 +870,22 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
                 className="flex items-center gap-2 px-3 py-1.5 bg-gold-500 text-navy-900 rounded-lg hover:bg-gold-600 transition-colors text-sm font-bold border border-gold-600"
                 title="צפה במקור המלא"
               >
-                <ExternalLink className="w-4 h-4" />
+                <span>⇢</span>
                 <span>צפה במקור</span>
               </button>
             )}
           </div>
-          <div className="divide-y divide-cream-200 max-h-[700px] overflow-y-auto">
+          <div className="divide-y divide-mouse-200 max-h-[700px] overflow-y-auto">
             {!selectedSourceData ? (
               <div className="p-8 text-center text-mouse-500">
-                <Search className="w-12 h-12 mx-auto mb-2 text-gold-300" />
+                <span className="w-12 h-12 mx-auto mb-2 block text-gold-300 text-4xl">🔍</span>
                 <p>לחץ על מקור כדי לראות את הפסקים המתייחסים אליו</p>
               </div>
             ) : (
               selectedSourceData.psakim.map((psakEntry) => {
                 const psak = psakim.find(p => p.id === psakEntry.psakId);
                 return (
-                <div key={psakEntry.psakId} className="p-4 hover:bg-cream-50">
+                <div key={psakEntry.psakId} className="p-4 hover:bg-mouse-50">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
                       <h3 className="font-bold text-navy-900">
@@ -855,7 +903,7 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
                           className="flex items-center gap-1 px-2 py-1 bg-navy-900 text-gold-400 rounded-lg hover:bg-navy-800 transition-colors text-xs font-bold"
                           title="תצוגה מפוצלת - גמרא ופסק יחד"
                         >
-                          <Columns className="w-3.5 h-3.5" />
+                          <span>‖</span>
                           <span>מפוצל</span>
                         </button>
                       )}
@@ -871,7 +919,7 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
                       <button
                         key={idx}
                         onClick={() => handlePsakClick(psakEntry.psakId, idx)}
-                          className="w-full text-right p-4 bg-cream-100 rounded-xl border-2 border-gold-200 hover:border-gold-500 hover:shadow-md transition-all group"
+                          className="w-full text-right p-4 bg-mouse-100 rounded-xl border-2 border-gold-200 hover:border-gold-500 hover:shadow-md transition-all group"
                         >
                           <div className="text-base text-navy-700 leading-relaxed">
                             <span className="text-mouse-400">...</span>
@@ -898,12 +946,12 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
       {showPsakSelector && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[80vh] flex flex-col border-2 border-gold-400">
-            <div className="p-6 border-b-2 border-gold-300 bg-gradient-to-l from-gold-100 to-cream-50">
+            <div className="p-6 border-b-2 border-gold-300 bg-gradient-to-l from-gold-100 to-mouse-50">
               <h2 className="text-2xl font-bold text-navy-900">בחירת פסקים לניתוח</h2>
               <p className="text-mouse-600 mt-1">בחר את הפסקים שברצונך לכלול באינדקס החכם</p>
             </div>
 
-            <div className="p-4 border-b-2 border-gold-200 flex gap-2 bg-cream-50">
+            <div className="p-4 border-b-2 border-gold-200 flex gap-2 bg-mouse-50">
               <button
                 onClick={selectAllPsakim}
                 className="px-4 py-2 bg-navy-900 text-gold-400 rounded-lg hover:bg-navy-800 transition-colors text-sm font-medium"
@@ -912,7 +960,7 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
               </button>
               <button
                 onClick={deselectAllPsakim}
-                className="px-4 py-2 bg-cream-200 text-navy-700 rounded-lg hover:bg-cream-300 transition-colors text-sm"
+                className="px-4 py-2 bg-mouse-200 text-navy-700 rounded-lg hover:bg-mouse-300 transition-colors text-sm"
               >
                 בטל הכל
               </button>
@@ -922,7 +970,7 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
               </span>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 bg-cream-50">
+            <div className="flex-1 overflow-y-auto p-4 bg-mouse-50">
               <div className="space-y-2">
                 {psakim.map((psak) => {
                   const isSelected = selectedPsakIds.has(psak.id);
@@ -933,14 +981,14 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
                       className={`w-full p-4 rounded-xl border-2 transition-all text-right flex items-start gap-3 ${
                         isSelected
                           ? 'border-gold-500 bg-gold-50'
-                          : 'border-cream-300 bg-white hover:border-gold-300'
+                          : 'border-mouse-300 bg-white hover:border-gold-300'
                       }`}
                     >
                       <div className="pt-1">
                         {isSelected ? (
-                          <CheckSquare className="w-5 h-5 text-gold-600" />
+                          <span className="w-5 h-5 flex items-center justify-center text-gold-600">✓</span>
                         ) : (
-                          <Square className="w-5 h-5 text-mouse-400" />
+                          <span className="w-5 h-5 flex items-center justify-center border-2 border-mouse-400 rounded">&nbsp;</span>
                         )}
                       </div>
                       <div className="flex-1">
@@ -953,7 +1001,7 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
               </div>
             </div>
 
-            <div className="p-6 border-t-2 border-gold-300 flex gap-3 bg-cream-50">
+            <div className="p-6 border-t-2 border-gold-300 flex gap-3 bg-mouse-50">
               <button
                 onClick={() => setShowPsakSelector(false)}
                 disabled={selectedPsakIds.size === 0}
@@ -966,7 +1014,7 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
                   setSelectedPsakIds(new Set(psakim.map(p => p.id)));
                   setShowPsakSelector(false);
                 }}
-                className="px-6 py-3 bg-cream-200 text-navy-700 rounded-xl hover:bg-cream-300 transition-colors"
+                className="px-6 py-3 bg-mouse-200 text-navy-700 rounded-xl hover:bg-mouse-300 transition-colors"
               >
                 ביטול
               </button>
@@ -982,7 +1030,7 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
             {/* Header */}
             <div className="p-4 border-b-2 border-gold-400 bg-gradient-to-l from-gold-500 to-navy-900 flex items-center justify-between">
               <div className="flex items-center gap-3 text-white">
-                <Columns className="w-6 h-6" />
+                <span className="text-xl">‖</span>
                 <h2 className="text-xl font-bold">תצוגה מפוצלת - מקור ופסק</h2>
               </div>
               <button
@@ -995,7 +1043,7 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
                 className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors"
                 title="סגור תצוגה מפוצלת"
               >
-                <X className="w-6 h-6" />
+                <span className="text-xl">✕</span>
               </button>
             </div>
             
@@ -1005,14 +1053,14 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
               <div className="flex flex-col overflow-hidden">
                 <div className="p-3 bg-gold-100 border-b-2 border-gold-300">
                   <h3 className="font-bold text-navy-900 flex items-center gap-2">
-                    <BookOpen className="w-5 h-5 text-gold-600" />
+                    <span className="w-5 h-5 flex items-center justify-center bg-gold-200 text-gold-700 rounded text-xs font-bold">מק</span>
                     {splitSourceData?.heTitle || splitViewSource?.replace(/gemara:|shulchan_aruch:|rambam:/g, '').replace(/:/g, ' ') || 'מקור'}
                   </h3>
                 </div>
-                <div className="flex-1 overflow-y-auto p-6 bg-cream-100" dir="rtl">
+                <div className="flex-1 overflow-y-auto p-6 bg-mouse-100" dir="rtl">
                   {splitLoading ? (
                     <div className="flex items-center justify-center h-full">
-                      <Loader className="w-8 h-8 text-gold-600 animate-spin" />
+                      <span className="w-8 h-8 border-4 border-gold-600 border-t-transparent rounded-full animate-spin"></span>
                       <span className="mr-3 text-mouse-600">טוען מקור...</span>
                     </div>
                   ) : splitSourceData ? (
@@ -1031,7 +1079,7 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
               <div className="flex flex-col overflow-hidden">
                 <div className="p-3 bg-navy-100 border-b-2 border-gold-300">
                   <h3 className="font-bold text-navy-900 flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-navy-600" />
+                    <span className="w-5 h-5 flex items-center justify-center bg-navy-200 text-navy-700 rounded text-xs font-bold">פס</span>
                     {splitViewPsak.title}
                     <span className="text-sm text-mouse-500 font-normal">
                       (פסק מס' {splitViewPsak.number})
@@ -1048,26 +1096,26 @@ const SmartIndex: React.FC<SmartIndexProps> = ({ psakim }) => {
             </div>
             
             {/* Footer with actions */}
-            <div className="p-4 border-t-2 border-gold-400 bg-cream-100 flex items-center justify-between">
+            <div className="p-4 border-t-2 border-gold-400 bg-mouse-100 flex items-center justify-between">
               <div className="flex gap-2">
                 <button
                   onClick={() => openSource(splitViewSource!)}
                   className="flex items-center gap-2 px-4 py-2 bg-gold-500 text-navy-900 rounded-lg hover:bg-gold-600 transition-colors text-sm font-bold"
                 >
-                  <Eye className="w-4 h-4" />
+                  <span>צפה</span>
                   פתח מקור בעמוד מלא
                 </button>
                 <button
                   onClick={() => navigate(`/psak/${splitViewPsak.id}`)}
                   className="flex items-center gap-2 px-4 py-2 bg-navy-900 text-gold-400 rounded-lg hover:bg-navy-800 transition-colors text-sm font-bold"
                 >
-                  <FileText className="w-4 h-4" />
+                  <span>פס</span>
                   פתח פסק בעמוד מלא
                 </button>
               </div>
               <button
                 onClick={() => setShowSplitView(false)}
-                className="px-4 py-2 bg-cream-200 text-navy-700 rounded-lg hover:bg-cream-300 transition-colors"
+                className="px-4 py-2 bg-mouse-200 text-navy-700 rounded-lg hover:bg-mouse-300 transition-colors"
               >
                 סגור
               </button>

@@ -2,17 +2,7 @@ import { useMemo, useState } from 'react';
 import { PsakDin, IndexEntry, ReferenceType } from '../types';
 import { getReferenceTypeName } from '../utils/psakUtils';
 import { Link } from 'react-router-dom';
-import { 
-  BookOpen, 
-  Search, 
-  Filter,
-  ChevronDown,
-  ChevronLeft,
-  FileText,
-  Hash,
-  Tag,
-  Lightbulb
-} from 'lucide-react';
+import { BookOpen, ChevronDown, ChevronLeft, Lightbulb } from 'lucide-react';
 
 interface IndexPageProps {
   psakim: PsakDin[];
@@ -125,86 +115,86 @@ const IndexPage = ({ psakim }: IndexPageProps) => {
     <div className="animate-fade-in">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2 flex items-center gap-3">
-          <BookOpen className="w-8 h-8 text-amber-500" />
+        <h1 className="text-3xl font-bold text-navy-800 mb-2 flex items-center gap-3">
+          <span className="w-8 h-8 flex items-center justify-center bg-gold-500 text-navy-900 rounded text-lg font-bold">אי</span>
           אינדקס מפורט
         </h1>
-        <p className="text-gray-600">
+        <p className="text-mouse-600">
           אינדקס חכם של כל ההפניות והנושאים מפסקי הדין
         </p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+        <div className="bg-white rounded-xl p-4 border border-gold-200 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <FileText className="w-5 h-5 text-blue-600" />
+            <div className="p-2 bg-navy-100 rounded-lg">
+              <span className="w-5 h-5 flex items-center justify-center text-navy-600 text-sm font-bold">פד</span>
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-800">{psakim.length}</div>
-              <div className="text-sm text-gray-500">פסקי דין</div>
+              <div className="text-2xl font-bold text-navy-800">{psakim.length}</div>
+              <div className="text-sm text-mouse-500">פסקי דין</div>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+        <div className="bg-white rounded-xl p-4 border border-gold-200 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-amber-100 rounded-lg">
-              <BookOpen className="w-5 h-5 text-amber-600" />
+            <div className="p-2 bg-gold-100 rounded-lg">
+              <span className="w-5 h-5 flex items-center justify-center text-gold-600 text-sm font-bold">מק</span>
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-800">{indexData.references.length}</div>
-              <div className="text-sm text-gray-500">הפניות למקורות</div>
+              <div className="text-2xl font-bold text-navy-800">{indexData.references.length}</div>
+              <div className="text-sm text-mouse-500">הפניות למקורות</div>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+        <div className="bg-white rounded-xl p-4 border border-gold-200 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-emerald-100 rounded-lg">
-              <Tag className="w-5 h-5 text-emerald-600" />
+            <div className="p-2 bg-gold-100 rounded-lg">
+              <span className="w-5 h-5 flex items-center justify-center text-gold-600 text-sm font-bold">נש</span>
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-800">{indexData.topics.length}</div>
-              <div className="text-sm text-gray-500">נושאים</div>
+              <div className="text-2xl font-bold text-navy-800">{indexData.topics.length}</div>
+              <div className="text-sm text-mouse-500">נושאים</div>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+        <div className="bg-white rounded-xl p-4 border border-gold-200 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <Hash className="w-5 h-5 text-purple-600" />
+            <div className="p-2 bg-navy-100 rounded-lg">
+              <span className="w-5 h-5 flex items-center justify-center text-navy-600 text-sm font-bold">#</span>
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-800">
+              <div className="text-2xl font-bold text-navy-800">
                 {Object.keys(referencesByType).length}
               </div>
-              <div className="text-sm text-gray-500">סוגי מקורות</div>
+              <div className="text-sm text-mouse-500">סוגי מקורות</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Search and Filter */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gold-200 mb-6">
         <div className="flex flex-wrap gap-4">
           <div className="flex-1 min-w-[300px]">
             <div className="relative">
-              <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-mouse-400">🔍</span>
               <input
                 type="text"
                 placeholder="חיפוש באינדקס..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pr-12 pl-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
+                className="w-full pr-12 pl-4 py-3 border border-gold-200 rounded-xl focus:ring-2 focus:ring-gold-500 focus:border-transparent outline-none"
               />
             </div>
           </div>
           <div className="relative">
-            <Filter className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-mouse-400">▼</span>
             <select
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value as ReferenceType | '')}
-              className="pr-12 pl-8 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none appearance-none bg-white cursor-pointer"
+              className="pr-12 pl-8 py-3 border border-gold-200 rounded-xl focus:ring-2 focus:ring-gold-500 focus:border-transparent outline-none appearance-none bg-white cursor-pointer"
             >
               <option value="">כל סוגי המקורות</option>
               {referenceTypes.map(type => (
@@ -217,9 +207,9 @@ const IndexPage = ({ psakim }: IndexPageProps) => {
 
       {/* Topics Section */}
       {indexData.topics.length > 0 && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <Tag className="w-5 h-5 text-emerald-500" />
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gold-200 mb-6">
+          <h2 className="text-xl font-bold text-navy-800 mb-4 flex items-center gap-2">
+            <span className="w-5 h-5 flex items-center justify-center bg-gold-100 text-gold-600 rounded text-xs font-bold">נש</span>
             נושאים עיקריים
           </h2>
           <div className="flex flex-wrap gap-2">
@@ -230,8 +220,8 @@ const IndexPage = ({ psakim }: IndexPageProps) => {
                 className={`
                   px-4 py-2 rounded-xl border transition-all
                   ${expandedItems.has(`topic-${topic.id}`)
-                    ? 'bg-emerald-100 border-emerald-300 text-emerald-800'
-                    : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-emerald-50 hover:border-emerald-200'
+                    ? 'bg-gold-100 border-gold-300 text-navy-800'
+                    : 'bg-mouse-50 border-mouse-200 text-navy-700 hover:bg-gold-50 hover:border-gold-200'
                   }
                 `}
               >
@@ -243,17 +233,17 @@ const IndexPage = ({ psakim }: IndexPageProps) => {
           
           {/* Expanded topic details */}
           {indexData.topics.filter(t => expandedItems.has(`topic-${t.id}`)).map(topic => (
-            <div key={`detail-${topic.id}`} className="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-              <h4 className="font-bold text-emerald-800 mb-2">{topic.term}</h4>
+            <div key={`detail-${topic.id}`} className="mt-4 p-4 bg-gold-50 rounded-xl border border-gold-100">
+              <h4 className="font-bold text-navy-800 mb-2">{topic.term}</h4>
               <div className="space-y-2">
                 {topic.occurrences.map((occ, idx) => (
                   <Link
                     key={idx}
                     to={`/psak/${occ.psakId}`}
-                    className="block p-3 bg-white rounded-lg hover:bg-emerald-100 transition-colors"
+                    className="block p-3 bg-white rounded-lg hover:bg-gold-100 transition-colors"
                   >
-                    <div className="font-medium text-gray-800">{occ.psakTitle}</div>
-                    <div className="text-sm text-gray-500 line-clamp-1">{occ.context}</div>
+                    <div className="font-medium text-navy-800">{occ.psakTitle}</div>
+                    <div className="text-sm text-mouse-500 line-clamp-1">{occ.context}</div>
                   </Link>
                 ))}
               </div>

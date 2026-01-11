@@ -11,12 +11,19 @@ import Connections from './pages/Connections';
 import GemaraExplorer from './pages/GemaraExplorer';
 import ShulchanAruchExplorer from './pages/ShulchanAruchExplorer';
 import SefarimExplorer from './pages/SefarimExplorer';
+import Favorites from './pages/Favorites';
 import { PsakDin } from './types';
 import { parsePsakFile } from './utils/psakUtils';
+import { TalmudNavigator } from './components/TalmudNavigator';
+import { ThemeProvider } from './context/ThemeContext';
 
 const STORAGE_KEY = 'psak-din-storage';
 
 function App() {
+  // Sidebar pinned state
+  const [sidebarPinned, setSidebarPinned] = useState(true);
+  const [sidebarWidth, setSidebarWidth] = useState(288); // 72 * 4 = 288px (w-72)
+  
   // Load from localStorage on startup
   const [psakim, setPsakim] = useState<PsakDin[]>(() => {
     try {
@@ -38,6 +45,12 @@ function App() {
   
   const [isLoading, setIsLoading] = useState(false);
 
+  // Expose sidebar offset as a CSS variable for pages that use fixed panels.
+  useEffect(() => {
+    const offsetPx = sidebarPinned ? sidebarWidth : 0;
+    document.documentElement.style.setProperty('--app-sidebar-offset', `${offsetPx}px`);
+  }, [sidebarPinned, sidebarWidth]);
+
   // Save to localStorage whenever psakim changes
   useEffect(() => {
     try {
@@ -55,37 +68,84 @@ function App() {
       for (const file of Array.from(files)) {
         if (file.name.endsWith('.html')) {
           const psak = await parsePsakFile(file);
-          newPsakim.push(psak);
+          
+          // Check if psak already exists (by number and title)
+          const isDuplicate = psakim.some(
+            existingPsak => 
+              existingPsak.number === psak.number && 
+              existingPsak.title === psak.title
+          );
+          
+          if (!isDuplicate) {
+            newPsakim.push(psak);
+          } else {
+            console.log(`Skipping duplicate psak: ${psak.number} - ${psak.title}`);
+          }
         }
       }
-      setPsakim(prev => [...prev, ...newPsakim]);
+      
+      if (newPsakim.length > 0) {
+        setPsakim(prev => [...prev, ...newPsakim]);
+        console.log(`Added ${newPsakim.length} new psakim, skipped ${Array.from(files).length - newPsakim.length} duplicates`);
+      }
     } catch (error) {
       console.error('Error uploading files:', error);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [psakim]);
 
   const handleDelete = useCallback((id: string) => {
     setPsakim(prev => prev.filter(p => p.id !== id));
   }, []);
 
+  const handleRemoveDuplicates = useCallback(() => {
+    const seen = new Map<string, PsakDin>();
+    const unique: PsakDin[] = [];
+    let duplicatesCount = 0;
+
+    for (const psak of psakim) {
+      const key = `${psak.number}-${psak.title}`;
+      if (!seen.has(key)) {
+        seen.set(key, psak);
+        unique.push(psak);
+      } else {
+        duplicatesCount++;
+      }
+    }
+
+    if (duplicatesCount > 0) {
+      setPsakim(unique);
+      console.log(`Removed ${duplicatesCount} duplicate psakim`);
+      alert(`הוסרו ${duplicatesCount} פסקי דין כפולים`);
+    } else {
+      alert('לא נמצאו פסקים כפולים');
+    }
+  }, [psakim]);
+
   return (
+    <ThemeProvider>
     <Router>
       <div className="flex min-h-screen bg-cream-gradient">
-        <Sidebar psakCount={psakim.length} />
-        <main className="flex-1 mr-72 p-8 bg-gradient-to-br from-cream-100 to-cream-200">
-          {/* Debug info */}
-          {process.env.NODE_ENV === 'development' && (
-            <div className="fixed bottom-4 left-4 bg-navy-900 text-gold-400 px-4 py-2 rounded-xl shadow-lg text-sm z-50 border border-gold-500/30">
-              📊 פסקים בזיכרון: {psakim.length}
-            </div>
-          )}
+        <Sidebar 
+          psakCount={psakim.length} 
+          onPinnedChange={setSidebarPinned}
+          onWidthChange={setSidebarWidth}
+        />
+        <main 
+          className="flex-1 p-8 bg-gradient-to-br from-cream-100 to-cream-200 transition-all duration-300"
+          style={{
+            marginRight: sidebarPinned ? `${sidebarWidth}px` : '0px'
+          }}
+        >
+          {/* Talmud Quick Navigator */}
+          <TalmudNavigator />
+          
           <Routes>
             <Route path="/" element={<Dashboard psakim={psakim} />} />
             <Route 
               path="/psakim" 
-              element={<PsakimList psakim={psakim} onDelete={handleDelete} />} 
+              element={<PsakimList psakim={psakim} onDelete={handleDelete} onRemoveDuplicates={handleRemoveDuplicates} />} 
             />
             <Route 
               path="/psak/:id" 
@@ -119,10 +179,15 @@ function App() {
               path="/connections" 
               element={<Connections psakim={psakim} />} 
             />
+            <Route 
+              path="/favorites" 
+              element={<Favorites />} 
+            />
           </Routes>
         </main>
       </div>
     </Router>
+    </ThemeProvider>
   );
 }
 

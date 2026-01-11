@@ -1,12 +1,4 @@
 import { useCallback, useState } from 'react';
-import { 
-  Upload as UploadIcon, 
-  FileText, 
-  CheckCircle, 
-  AlertCircle,
-  Loader2,
-  FolderOpen
-} from 'lucide-react';
 
 interface UploadProps {
   onUpload: (files: FileList) => Promise<void>;
@@ -63,7 +55,7 @@ const Upload = ({ onUpload, isLoading }: UploadProps) => {
       {/* Header */}
       <div className="mb-8 text-center">
         <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-gold-400 to-gold-600 rounded-2xl mb-4 shadow-gold">
-          <UploadIcon className="w-8 h-8 text-navy-900" />
+          <span className="text-xl font-bold text-navy-900">הע</span>
         </div>
         <h1 className="text-3xl font-bold text-navy-900 mb-2">
           העלאת פסקי דין
@@ -89,7 +81,7 @@ const Upload = ({ onUpload, isLoading }: UploadProps) => {
       >
         {isLoading ? (
           <div className="flex flex-col items-center">
-            <Loader2 className="w-16 h-16 text-gold-500 animate-spin mb-4" />
+            <div className="w-16 h-16 border-4 border-gold-500 border-t-transparent rounded-full animate-spin mb-4"></div>
             <p className="text-xl font-medium text-navy-900">מעבד קבצים...</p>
             <p className="text-mouse-500 mt-2">מחלץ מידע ויוצר אינדקס</p>
           </div>
@@ -97,7 +89,7 @@ const Upload = ({ onUpload, isLoading }: UploadProps) => {
           <>
             <div className="mb-6">
               <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-gold-200 to-gold-400 rounded-2xl mb-4 shadow-lg">
-                <FolderOpen className="w-10 h-10 text-navy-900" />
+                <span className="text-3xl font-bold text-navy-900">קב</span>
               </div>
             </div>
             
@@ -109,7 +101,6 @@ const Upload = ({ onUpload, isLoading }: UploadProps) => {
             </p>
             
             <label className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-navy-900 rounded-xl cursor-pointer hover:from-gold-600 hover:to-gold-700 transition-all shadow-lg hover:shadow-xl border border-gold-400 font-bold">
-              <FileText className="w-5 h-5" />
               <span className="font-medium">בחר קבצים</span>
               <input
                 type="file"
@@ -129,16 +120,16 @@ const Upload = ({ onUpload, isLoading }: UploadProps) => {
 
       {/* Status Messages */}
       {error && (
-        <div className="mt-6 p-4 bg-red-50 border-2 border-red-300 rounded-xl flex items-center gap-3">
-          <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-          <p className="text-red-700">{error}</p>
+        <div className="mt-6 p-4 bg-navy-100 border-2 border-navy-300 rounded-xl flex items-center gap-3">
+          <span className="w-6 h-6 rounded-full bg-navy-900 text-white flex items-center justify-center text-sm font-bold">!</span>
+          <p className="text-navy-700">{error}</p>
         </div>
       )}
 
       {uploadedCount > 0 && !error && (
-        <div className="mt-6 p-4 bg-green-50 border-2 border-green-300 rounded-xl flex items-center gap-3">
-          <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-          <p className="text-green-700 font-medium">
+        <div className="mt-6 p-4 bg-gold-50 border-2 border-gold-300 rounded-xl flex items-center gap-3">
+          <span className="w-6 h-6 rounded-full bg-gold-500 text-navy-900 flex items-center justify-center text-sm font-bold">✓</span>
+          <p className="text-navy-700 font-medium">
             הועלו בהצלחה {uploadedCount} פסקי דין!
           </p>
         </div>
@@ -147,7 +138,7 @@ const Upload = ({ onUpload, isLoading }: UploadProps) => {
       {/* Instructions */}
       <div className="mt-8 bg-white rounded-2xl p-6 border-2 border-gold-400 shadow-elegant">
         <h3 className="text-lg font-bold text-navy-900 mb-4 flex items-center gap-2">
-          <span className="p-2 bg-gold-100 rounded-lg">💡</span>
+          <span className="w-8 h-8 bg-gold-100 rounded-lg flex items-center justify-center text-gold-600 font-bold">?</span>
           איך זה עובד?
         </h3>
         <ul className="space-y-3 text-navy-700">

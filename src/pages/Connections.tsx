@@ -1,16 +1,6 @@
 import { useMemo, useState } from 'react';
-import { PsakDin, ReferenceType } from '../types';
-import { getReferenceTypeName } from '../utils/psakUtils';
+import { PsakDin } from '../types';
 import { Link } from 'react-router-dom';
-import { 
-  Link2, 
-  BookOpen, 
-  Search,
-  ExternalLink,
-  FileText,
-  Sparkles,
-  Library
-} from 'lucide-react';
 
 interface ConnectionsProps {
   psakim: PsakDin[];
@@ -18,12 +8,12 @@ interface ConnectionsProps {
 
 // Mock holy books data - in a real app this would come from an API
 const holyBooks = [
-  { id: 'gemara', name: 'תלמוד בבלי', icon: '📚', color: 'blue' },
-  { id: 'shulchan_aruch', name: 'שולחן ערוך', icon: '📖', color: 'emerald' },
-  { id: 'rambam', name: 'משנה תורה', icon: '📜', color: 'amber' },
-  { id: 'tur', name: 'ארבעה טורים', icon: '📕', color: 'red' },
-  { id: 'mishna', name: 'משנה', icon: '📗', color: 'green' },
-  { id: 'responsa', name: 'שאלות ותשובות', icon: '✍️', color: 'purple' },
+  { id: 'gemara', name: 'תלמוד בבלי', symbol: 'גמ', color: 'navy' },
+  { id: 'shulchan_aruch', name: 'שולחן ערוך', symbol: 'ש"ע', color: 'gold' },
+  { id: 'rambam', name: 'משנה תורה', symbol: 'רמ', color: 'navy' },
+  { id: 'tur', name: 'ארבעה טורים', symbol: 'טור', color: 'gold' },
+  { id: 'mishna', name: 'משנה', symbol: 'מש', color: 'navy' },
+  { id: 'responsa', name: 'שאלות ותשובות', symbol: 'ש"ת', color: 'gold' },
 ];
 
 const Connections = ({ psakim }: ConnectionsProps) => {
@@ -88,25 +78,24 @@ const Connections = ({ psakim }: ConnectionsProps) => {
     <div className="animate-fade-in">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2 flex items-center gap-3">
-          <Link2 className="w-8 h-8 text-purple-500" />
+        <h1 className="text-3xl font-bold text-navy-800 mb-2 flex items-center gap-3">
+          <span className="w-10 h-10 bg-gold-500 rounded-lg flex items-center justify-center text-navy-900 font-bold">קש</span>
           קישור לספרי קודש
         </h1>
-        <p className="text-gray-600">
+        <p className="text-mouse-600">
           חיבור פסקי הדין למקורות בגמרא, שולחן ערוך ושאר ספרי קודש
         </p>
       </div>
 
       {/* Stats Bar */}
-      <div className="bg-gradient-to-l from-purple-600 to-indigo-600 rounded-2xl p-6 text-white mb-6 shadow-xl">
+      <div className="bg-gradient-to-l from-navy-800 to-navy-900 rounded-2xl p-6 text-white mb-6 shadow-xl border-2 border-gold-500">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold mb-1">{totalConnections} קישורים</h2>
-            <p className="text-purple-200">נמצאו בין הפסקים לספרי הקודש</p>
+            <p className="text-mouse-300">נמצאו בין הפסקים לספרי הקודש</p>
           </div>
           <div className="flex items-center gap-2">
-            <Sparkles className="w-8 h-8 text-amber-300" />
-            <Library className="w-10 h-10 text-white/80" />
+            <span className="w-10 h-10 bg-gold-500 rounded-lg flex items-center justify-center text-navy-900 font-bold">ספ</span>
           </div>
         </div>
       </div>
@@ -114,9 +103,9 @@ const Connections = ({ psakim }: ConnectionsProps) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Books List */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 sticky top-6">
-            <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-purple-500" />
+          <div className="bg-white rounded-2xl p-6 shadow-sm border-2 border-gold-400 sticky top-6">
+            <h2 className="text-lg font-bold text-navy-800 mb-4 flex items-center gap-2">
+              <span className="w-6 h-6 bg-gold-500 rounded flex items-center justify-center text-navy-900 text-xs font-bold">ספ</span>
               ספרי קודש
             </h2>
             <div className="space-y-2">
@@ -133,24 +122,24 @@ const Connections = ({ psakim }: ConnectionsProps) => {
                     className={`
                       w-full p-4 rounded-xl text-right transition-all flex items-center gap-3
                       ${isSelected 
-                        ? 'bg-purple-100 border-2 border-purple-300 shadow-md' 
+                        ? 'bg-gold-100 border-2 border-gold-500 shadow-md' 
                         : count > 0
-                          ? 'bg-gray-50 border border-gray-100 hover:bg-purple-50 hover:border-purple-200'
-                          : 'bg-gray-50 border border-gray-100 opacity-50 cursor-not-allowed'
+                          ? 'bg-mouse-50 border border-mouse-200 hover:bg-gold-50 hover:border-gold-300'
+                          : 'bg-mouse-50 border border-mouse-200 opacity-50 cursor-not-allowed'
                       }
                     `}
                   >
-                    <span className="text-2xl">{book.icon}</span>
+                    <span className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold ${book.color === 'navy' ? 'bg-navy-800 text-gold-400' : 'bg-gold-500 text-navy-900'}`}>{book.symbol}</span>
                     <div className="flex-1">
-                      <div className="font-medium text-gray-800">{book.name}</div>
-                      <div className="text-sm text-gray-500">
+                      <div className="font-medium text-navy-800">{book.name}</div>
+                      <div className="text-sm text-mouse-500">
                         {count > 0 ? `${count} הפניות` : 'אין הפניות'}
                       </div>
                     </div>
                     {count > 0 && (
                       <span className={`
                         px-2 py-1 rounded-full text-xs font-bold
-                        ${isSelected ? 'bg-purple-500 text-white' : 'bg-gray-200 text-gray-600'}
+                        ${isSelected ? 'bg-gold-500 text-navy-900' : 'bg-mouse-200 text-mouse-600'}
                       `}>
                         {count}
                       </span>
@@ -165,16 +154,16 @@ const Connections = ({ psakim }: ConnectionsProps) => {
         {/* References Panel */}
         <div className="lg:col-span-2">
           {selectedBookData ? (
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-sm border-2 border-gold-400 overflow-hidden">
               {/* Header */}
-              <div className="p-6 bg-gradient-to-l from-purple-50 to-indigo-50 border-b border-gray-100">
+              <div className="p-6 bg-gradient-to-l from-gold-50 to-mouse-50 border-b border-gold-200">
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="text-3xl">{selectedBookData.book.icon}</span>
+                  <span className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold ${selectedBookData.book.color === 'navy' ? 'bg-navy-800 text-gold-400' : 'bg-gold-500 text-navy-900'}`}>{selectedBookData.book.symbol}</span>
                   <div>
-                    <h3 className="text-xl font-bold text-gray-800">
+                    <h3 className="text-xl font-bold text-navy-800">
                       {selectedBookData.book.name}
                     </h3>
-                    <p className="text-gray-500">
+                    <p className="text-mouse-500">
                       {selectedBookData.references.length} מקומות מוזכרים בפסקים
                     </p>
                   </div>
@@ -182,13 +171,13 @@ const Connections = ({ psakim }: ConnectionsProps) => {
                 
                 {/* Search */}
                 <div className="relative">
-                  <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gold-500 font-bold text-sm">חפש</span>
                   <input
                     type="text"
                     placeholder={`חיפוש ב${selectedBookData.book.name}...`}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pr-12 pl-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                    className="w-full pr-16 pl-4 py-3 border-2 border-gold-300 rounded-xl focus:ring-2 focus:ring-gold-400 focus:border-gold-500 outline-none"
                   />
                 </div>
               </div>
@@ -200,24 +189,24 @@ const Connections = ({ psakim }: ConnectionsProps) => {
                     {filteredReferences.map((ref, idx) => (
                       <div 
                         key={idx}
-                        className="p-4 bg-gray-50 rounded-xl border border-gray-100 hover:border-purple-200 transition-colors"
+                        className="p-4 bg-mouse-50 rounded-xl border border-gold-200 hover:border-gold-400 transition-colors"
                       >
                         <div className="flex items-center gap-2 mb-3">
-                          <BookOpen className="w-4 h-4 text-purple-500" />
-                          <span className="font-bold text-gray-800">{ref.source}</span>
+                          <span className="w-2 h-2 rounded-full bg-gold-500"></span>
+                          <span className="font-bold text-navy-800">{ref.source}</span>
                         </div>
                         <div className="space-y-2">
                           {ref.psakim.map(psak => (
                             <Link
                               key={psak.id}
                               to={`/psak/${psak.id}`}
-                              className="flex items-center gap-2 p-2 bg-white rounded-lg border border-gray-100 hover:border-purple-200 hover:bg-purple-50 transition-colors group"
+                              className="flex items-center gap-2 p-2 bg-white rounded-lg border border-mouse-200 hover:border-gold-400 hover:bg-gold-50 transition-colors group"
                             >
-                              <FileText className="w-4 h-4 text-gray-400 group-hover:text-purple-500" />
-                              <span className="text-sm text-gray-600 group-hover:text-purple-700">
+                              <span className="w-6 h-6 bg-gold-100 rounded flex items-center justify-center text-xs font-bold text-gold-600 group-hover:bg-gold-500 group-hover:text-navy-900">פד</span>
+                              <span className="text-sm text-navy-600 group-hover:text-navy-800">
                                 פסק #{psak.number}: {psak.title}
                               </span>
-                              <ExternalLink className="w-3 h-3 text-gray-300 mr-auto opacity-0 group-hover:opacity-100" />
+                              <span className="text-gold-500 mr-auto opacity-0 group-hover:opacity-100">►</span>
                             </Link>
                           ))}
                         </div>
@@ -225,20 +214,24 @@ const Connections = ({ psakim }: ConnectionsProps) => {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    <Search className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                  <div className="text-center py-8 text-mouse-500">
+                    <div className="w-16 h-16 mx-auto mb-3 bg-mouse-100 rounded-2xl flex items-center justify-center">
+                      <span className="text-2xl font-bold text-mouse-300">חפ</span>
+                    </div>
                     <p>לא נמצאו תוצאות</p>
                   </div>
                 )}
               </div>
             </div>
           ) : (
-            <div className="bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-100">
-              <Library className="w-16 h-16 mx-auto mb-4 text-purple-300" />
-              <h3 className="text-xl font-medium text-gray-600 mb-2">
+            <div className="bg-white rounded-2xl p-12 text-center shadow-sm border-2 border-gold-400">
+              <div className="w-20 h-20 mx-auto mb-4 bg-gold-100 rounded-2xl flex items-center justify-center">
+                <span className="text-3xl font-bold text-gold-400">ספ</span>
+              </div>
+              <h3 className="text-xl font-medium text-navy-600 mb-2">
                 בחר ספר קודש לצפייה בקישורים
               </h3>
-              <p className="text-gray-400">
+              <p className="text-mouse-400">
                 לחץ על אחד מספרי הקודש משמאל לצפייה בכל ההפניות אליו מהפסקים
               </p>
             </div>
@@ -247,22 +240,22 @@ const Connections = ({ psakim }: ConnectionsProps) => {
       </div>
 
       {/* Info Card */}
-      <div className="mt-6 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 border border-indigo-100">
-        <h3 className="text-lg font-bold text-indigo-800 mb-4 flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-amber-500" />
+      <div className="mt-6 bg-gradient-to-br from-gold-50 to-mouse-50 rounded-2xl p-6 border-2 border-gold-400">
+        <h3 className="text-lg font-bold text-navy-800 mb-4 flex items-center gap-2">
+          <span className="w-8 h-8 bg-gold-500 rounded-lg flex items-center justify-center text-navy-900 font-bold">?</span>
           על מערכת הקישורים
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-indigo-700">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-navy-700">
           <div className="flex items-start gap-2">
-            <span className="font-bold text-indigo-500">1.</span>
+            <span className="font-bold text-gold-600">1.</span>
             <p>זיהוי אוטומטי של הפניות לגמרא, שו"ע, רמב"ם ועוד</p>
           </div>
           <div className="flex items-start gap-2">
-            <span className="font-bold text-indigo-500">2.</span>
+            <span className="font-bold text-gold-600">2.</span>
             <p>מיפוי בין מקורות ההלכה לפסקי הדין הרלוונטיים</p>
           </div>
           <div className="flex items-start gap-2">
-            <span className="font-bold text-indigo-500">3.</span>
+            <span className="font-bold text-gold-600">3.</span>
             <p>בעתיד: קישור ישיר לטקסט המלא בספרות התורנית</p>
           </div>
         </div>

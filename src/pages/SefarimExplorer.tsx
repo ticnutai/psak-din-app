@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Search, Library, ArrowRight, ChevronLeft, BookMarked, Scroll } from 'lucide-react';
 
 // קטגוריות ספרים מספריא - מבנה היררכי
 const SEFARIM_CATEGORIES = {
   'תנ"ך': {
     icon: '📜',
-    color: 'from-indigo-500 to-indigo-600',
+    color: 'from-navy-600 to-navy-800',
     books: [
       { name: 'בראשית', ref: 'Genesis', chapters: 50 },
       { name: 'שמות', ref: 'Exodus', chapters: 40 },
@@ -29,7 +28,7 @@ const SEFARIM_CATEGORIES = {
   },
   'משנה': {
     icon: '📖',
-    color: 'from-teal-500 to-teal-600',
+    color: 'from-gold-500 to-gold-600',
     books: [
       { name: 'ברכות', ref: 'Mishnah_Berakhot', chapters: 9 },
       { name: 'פאה', ref: 'Mishnah_Peah', chapters: 8 },
@@ -48,7 +47,7 @@ const SEFARIM_CATEGORIES = {
   },
   'רמב"ם': {
     icon: '👑',
-    color: 'from-amber-500 to-amber-600',
+    color: 'from-navy-500 to-gold-600',
     books: [
       { name: 'משנה תורה - הלכות יסודי התורה', ref: 'Mishneh_Torah,_Foundations_of_the_Torah', chapters: 10 },
       { name: 'משנה תורה - הלכות דעות', ref: 'Mishneh_Torah,_Human_Dispositions', chapters: 7 },
@@ -62,7 +61,7 @@ const SEFARIM_CATEGORIES = {
   },
   'מפרשי רש"י': {
     icon: '✍️',
-    color: 'from-rose-500 to-rose-600',
+    color: 'from-mouse-500 to-mouse-600',
     books: [
       { name: 'רש"י על התורה - בראשית', ref: 'Rashi_on_Genesis', chapters: 50 },
       { name: 'רש"י על התורה - שמות', ref: 'Rashi_on_Exodus', chapters: 40 },
@@ -73,7 +72,7 @@ const SEFARIM_CATEGORIES = {
   },
   'מוסר': {
     icon: '💎',
-    color: 'from-emerald-500 to-emerald-600',
+    color: 'from-gold-600 to-navy-600',
     books: [
       { name: 'מסילת ישרים', ref: 'Mesillat_Yesharim', chapters: 26 },
       { name: 'חובות הלבבות', ref: 'Duties_of_the_Heart', chapters: 10 },
@@ -83,7 +82,7 @@ const SEFARIM_CATEGORIES = {
   },
   'קבלה וחסידות': {
     icon: '🕯️',
-    color: 'from-violet-500 to-violet-600',
+    color: 'from-navy-700 to-navy-900',
     books: [
       { name: 'זוהר - בראשית', ref: 'Zohar', chapters: 1 },
       { name: 'תניא', ref: 'Tanya', chapters: 53 },
@@ -163,7 +162,7 @@ const SefarimExplorer: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-gradient-to-br from-gold-400 to-gold-600 rounded-xl shadow-gold">
-              <Library className="w-8 h-8 text-navy-900" />
+              <span className="w-8 h-8 flex items-center justify-center text-navy-900 text-2xl font-bold">ספ</span>
             </div>
             <div>
               <h1 className="text-3xl font-bold text-navy-900">ספריית הספרים</h1>
@@ -177,9 +176,9 @@ const SefarimExplorer: React.FC = () => {
           {viewMode !== 'categories' && (
             <button
               onClick={handleBack}
-              className="flex items-center gap-2 px-4 py-2 bg-cream-200 text-navy-900 rounded-xl hover:bg-cream-300 transition-colors font-medium"
+              className="flex items-center gap-2 px-4 py-2 bg-mouse-200 text-navy-900 rounded-xl hover:bg-mouse-300 transition-colors font-medium"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <span>←</span>
               חזור
             </button>
           )}
@@ -208,7 +207,7 @@ const SefarimExplorer: React.FC = () => {
                 </p>
                 <div className="mt-4 flex items-center justify-center gap-2 text-gold-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
                   <span>לחץ לפתיחה</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span>→</span>
                 </div>
               </button>
             );
@@ -227,9 +226,9 @@ const SefarimExplorer: React.FC = () => {
                 placeholder="חפש ספר..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-3 pr-12 bg-cream-50 border-2 border-gold-300 rounded-xl focus:outline-none focus:border-gold-500 text-navy-900 placeholder-mouse-400"
+                className="w-full px-4 py-3 pr-12 bg-mouse-50 border-2 border-gold-300 rounded-xl focus:outline-none focus:border-gold-500 text-navy-900 placeholder-mouse-400"
               />
-              <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gold-500" />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gold-500">🔍</span>
             </div>
           </div>
 
@@ -239,14 +238,14 @@ const SefarimExplorer: React.FC = () => {
               <button
                 key={book.ref}
                 onClick={() => handleBookClick(book)}
-                className="group flex items-center justify-between p-4 bg-cream-50 rounded-xl border-2 border-gold-200 hover:border-gold-500 hover:bg-gold-50 transition-all"
+                className="group flex items-center justify-between p-4 bg-mouse-50 rounded-xl border-2 border-gold-200 hover:border-gold-500 hover:bg-gold-50 transition-all"
               >
                 <div className="text-right flex-1">
                   <div className="text-lg font-bold text-navy-900 mb-1">{book.name}</div>
                   <div className="text-sm text-mouse-600">{book.chapters} פרקים</div>
                 </div>
                 <div className="p-2 bg-gold-100 rounded-lg group-hover:bg-gold-200 transition-colors">
-                  <BookOpen className="w-5 h-5 text-gold-600" />
+                  <span className="w-5 h-5 flex items-center justify-center text-gold-600 text-sm font-bold">ספ</span>
                 </div>
               </button>
             ))}
@@ -254,7 +253,7 @@ const SefarimExplorer: React.FC = () => {
 
           {getFilteredBooks().length === 0 && (
             <div className="text-center py-12 text-mouse-500">
-              <BookOpen className="w-16 h-16 mx-auto mb-4 text-gold-300" />
+              <span className="w-16 h-16 mx-auto mb-4 block text-gold-300 text-6xl">📚</span>
               <p>לא נמצאו ספרים</p>
             </div>
           )}
@@ -274,7 +273,7 @@ const SefarimExplorer: React.FC = () => {
               <button
                 key={chapter}
                 onClick={() => handleChapterClick(chapter)}
-                className="group relative bg-cream-50 rounded-xl border-2 border-gold-300 hover:border-gold-500 hover:bg-gold-50 transition-all p-4 text-center"
+                className="group relative bg-mouse-50 rounded-xl border-2 border-gold-300 hover:border-gold-500 hover:bg-gold-50 transition-all p-4 text-center"
               >
                 <div className="text-lg font-bold text-navy-900 mb-1">
                   פרק {numberToHebrew(chapter)}
@@ -294,7 +293,7 @@ const SefarimExplorer: React.FC = () => {
       {viewMode === 'categories' && (
         <div className="fixed bottom-8 right-8">
           <button className="w-16 h-16 bg-gradient-to-br from-gold-500 to-gold-600 rounded-full shadow-xl hover:shadow-2xl transition-all flex items-center justify-center text-navy-900 hover:scale-110">
-            <Library className="w-8 h-8" />
+            <span className="text-2xl font-bold">ספ</span>
           </button>
         </div>
       )}
