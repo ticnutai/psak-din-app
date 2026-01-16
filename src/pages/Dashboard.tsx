@@ -17,7 +17,7 @@ const Dashboard = ({ psakim }: DashboardProps) => {
     { 
       label: 'פסקי דין', 
       value: psakim.length, 
-      symbol: 'פד',
+      symbol: '',
       borderColor: 'border-gold-400',
       symbolBg: 'bg-navy-900',
       symbolColor: 'text-gold-400'
@@ -25,7 +25,7 @@ const Dashboard = ({ psakim }: DashboardProps) => {
     { 
       label: 'הפניות למקורות', 
       value: totalReferences, 
-      symbol: 'מק',
+      symbol: '',
       borderColor: 'border-gold-400',
       symbolBg: 'bg-gold-500',
       symbolColor: 'text-white'
@@ -33,7 +33,7 @@ const Dashboard = ({ psakim }: DashboardProps) => {
     { 
       label: 'קטגוריות', 
       value: categories.length, 
-      symbol: 'קט',
+      symbol: '',
       borderColor: 'border-gold-400',
       symbolBg: 'bg-navy-800',
       symbolColor: 'text-gold-400'
@@ -41,7 +41,7 @@ const Dashboard = ({ psakim }: DashboardProps) => {
     { 
       label: 'קישורים לספרים', 
       value: totalReferences, 
-      symbol: 'ספ',
+      symbol: '',
       borderColor: 'border-gold-400',
       symbolBg: 'bg-gold-600',
       symbolColor: 'text-white'
@@ -54,7 +54,7 @@ const Dashboard = ({ psakim }: DashboardProps) => {
       <div className="mb-8 p-6 bg-white rounded-2xl border-2 border-gold-400 shadow-elegant">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 bg-gradient-to-br from-gold-400 to-gold-600 rounded-2xl shadow-gold flex items-center justify-center">
-            <span className="text-2xl font-bold text-navy-900">פד</span>
+            <span className="text-2xl font-bold text-navy-900"></span>
           </div>
           <div>
             <h1 className="text-4xl font-bold text-navy-900 mb-1">
@@ -78,7 +78,6 @@ const Dashboard = ({ psakim }: DashboardProps) => {
               <div className={`w-12 h-12 rounded-xl ${symbolBg} shadow-lg flex items-center justify-center`}>
                 <span className={`text-sm font-bold ${symbolColor}`}>{symbol}</span>
               </div>
-              <span className="text-gold-500 font-bold">▲</span>
             </div>
             <div className="text-4xl font-bold text-navy-900 mb-1">{value}</div>
             <div className="text-mouse-600 font-medium">{label}</div>
@@ -92,7 +91,7 @@ const Dashboard = ({ psakim }: DashboardProps) => {
         <div className="bg-white rounded-2xl p-6 border-2 border-gold-400 shadow-elegant">
           <h2 className="text-xl font-bold text-navy-900 mb-4 flex items-center gap-2">
             <div className="w-8 h-8 bg-gold-500 rounded-lg flex items-center justify-center">
-              <span className="text-xs font-bold text-navy-900">פע</span>
+              <span className="text-xs font-bold text-navy-900"></span>
             </div>
             פעולות מהירות
           </h2>
@@ -102,7 +101,7 @@ const Dashboard = ({ psakim }: DashboardProps) => {
               className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-l from-mouse-100 to-mouse-50 hover:from-gold-100 hover:to-gold-200 transition-all group border border-gold-200"
             >
               <div className="w-10 h-10 bg-navy-900 rounded-lg group-hover:bg-gold-500 transition-colors flex items-center justify-center">
-                <span className="text-xs font-bold text-gold-400 group-hover:text-navy-900">הע</span>
+                <span className="text-xs font-bold text-gold-400 group-hover:text-navy-900"></span>
               </div>
               <div>
                 <div className="font-medium text-navy-900">העלאת פסקי דין</div>
@@ -114,7 +113,7 @@ const Dashboard = ({ psakim }: DashboardProps) => {
               className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-l from-mouse-100 to-mouse-50 hover:from-gold-100 hover:to-gold-200 transition-all group border border-gold-200"
             >
               <div className="w-10 h-10 bg-gold-500 rounded-lg group-hover:bg-navy-900 transition-colors flex items-center justify-center">
-                <span className="text-xs font-bold text-navy-900 group-hover:text-gold-400">אי</span>
+                <span className="text-xs font-bold text-navy-900 group-hover:text-gold-400"></span>
               </div>
               <div>
                 <div className="font-medium text-navy-900">צפייה באינדקס</div>
@@ -126,7 +125,7 @@ const Dashboard = ({ psakim }: DashboardProps) => {
               className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-l from-mouse-100 to-mouse-50 hover:from-gold-100 hover:to-gold-200 transition-all group border border-gold-200"
             >
               <div className="w-10 h-10 bg-navy-800 rounded-lg group-hover:bg-gold-500 transition-colors flex items-center justify-center">
-                <span className="text-xs font-bold text-gold-400 group-hover:text-navy-900">ספ</span>
+                <span className="text-xs font-bold text-gold-400 group-hover:text-navy-900"></span>
               </div>
               <div>
                 <div className="font-medium text-navy-900">קישור לספרי קודש</div>
@@ -162,7 +161,7 @@ const Dashboard = ({ psakim }: DashboardProps) => {
           ) : (
             <div className="text-center py-8 text-mouse-500">
               <div className="w-16 h-16 mx-auto mb-3 bg-gold-100 rounded-2xl flex items-center justify-center">
-                <span className="text-gold-400 text-2xl font-bold">פד</span>
+                <span className="text-gold-400 text-2xl font-bold"></span>
               </div>
               <p>עדיין לא הועלו פסקי דין</p>
               <Link to="/upload" className="text-gold-600 hover:text-gold-700 hover:underline font-medium">
