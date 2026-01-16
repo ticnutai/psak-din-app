@@ -74,13 +74,8 @@ const Dashboard = ({ psakim }: DashboardProps) => {
             key={label}
             className={`bg-white rounded-2xl p-6 border-2 ${borderColor} card-elegant transition-all hover:shadow-gold`}
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className={`w-12 h-12 rounded-xl ${symbolBg} shadow-lg flex items-center justify-center`}>
-                <span className={`text-sm font-bold ${symbolColor}`}>{symbol}</span>
-              </div>
-            </div>
-            <div className="text-4xl font-bold text-navy-900 mb-1">{value}</div>
-            <div className="text-mouse-600 font-medium">{label}</div>
+            <div className="text-2xl font-bold text-gold-500 mb-4">{label}</div>
+            <div className="text-5xl font-bold text-navy-900">{value}</div>
           </div>
         ))}
       </div>
@@ -147,10 +142,10 @@ const Dashboard = ({ psakim }: DashboardProps) => {
                 <Link
                   key={psak.id}
                   to={`/psak/${psak.id}`}
-                  className="block p-4 rounded-xl border-2 border-mouse-200 hover:border-gold-400 hover:bg-gold-50 transition-all"
+                  className="block p-4 rounded-xl border-2 border-mouse-200 hover:border-gold-400 hover:bg-gold-50 transition-all group"
                 >
                   <div className="font-medium text-navy-900 mb-1">{psak.title}</div>
-                  <div className="flex items-center gap-2 text-sm text-mouse-600">
+                  <div className="flex items-center gap-2 text-sm text-mouse-600 opacity-0 group-hover:opacity-100 transition-opacity">
                     <span>פסק #{psak.number}</span>
                     <span>•</span>
                     <span>{psak.categories.join(', ')}</span>
